@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cangibrina — Kléber Albuquerque & Vivi Correa</title>
+    <link rel="icon" href="https://static.wixstatic.com/media/f0cf30_4de425da646b427e863796cfbcd20b7f%7Emv2.jpg/v1/fill/w_32%2Ch_32%2Clg_1%2Cusm_0.66_1.00_0.01/f0cf30_4de425da646b427e863796cfbcd20b7f%7Emv2.jpg" type="image/jpeg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Manrope', 'sans-serif'], display: ['Nunito', 'sans-serif'] },
+                    colors: { gold: { 100:'#FFF8CC', 300:'#FEDB00', 400:'#FEDB00', 500:'#E6C600', 600:'#B39700' }, charcoal: { 800:'#1A1A1A', 900:'#111111', 950:'#050505' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::selection { background: rgba(254,219,0,0.2); color: #FEDB00; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 3px; }
+        html { scroll-behavior: smooth; }
+        .noise-bg { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.02; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        @keyframes fade-up { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes line-grow { from { transform:scaleX(0); } to { transform:scaleX(1); } }
+        .anim { opacity: 0; }
+        .anim.visible { animation: fade-up 1s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .anim-line { transform: scaleX(0); transform-origin: left; }
+        .anim-line.visible { animation: line-grow 1.2s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .d1 { animation-delay: .1s !important; } .d2 { animation-delay: .2s !important; }
+        .d3 { animation-delay: .3s !important; } .d4 { animation-delay: .4s !important; }
+        .d5 { animation-delay: .5s !important; } .d6 { animation-delay: .6s !important; }
+        .nav-blur { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); }
+        .lang-btn.active { background: rgba(254,219,0,0.12); color: #FEDB00; }
+        .mobile-menu { clip-path: inset(0 0 100% 0); transition: clip-path .6s cubic-bezier(.16,1,.3,1); }
+        .mobile-menu.open { clip-path: inset(0 0 0 0); }
+        .input-line { border-bottom: 1px solid rgba(255,255,255,0.1); transition: border-color .3s; }
+        .input-line:focus-within { border-color: rgba(254,219,0,0.5); }
+        .video-thumb { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 0.5rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: border-color .4s; }
+        .video-thumb:hover { border-color: rgba(254,219,0,0.25); }
+        .video-thumb img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.16,1,.3,1), filter .4s; filter: brightness(0.65); }
+        .video-thumb:hover img { transform: scale(1.04); filter: brightness(0.82); }
+        .video-thumb .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border-radius: 50%; background: rgba(254,219,0,0.85); display: flex; align-items: center; justify-content: center; transition: all .3s; z-index: 2; box-shadow: 0 0 30px rgba(254,219,0,0.3); }
+        .video-thumb:hover .play-btn { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 40px rgba(254,219,0,0.5); }
+        .video-thumb .play-btn svg { margin-left: 3px; }
+        .tech-row { border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .tech-row:last-child { border-bottom: none; }
+        [data-lang] { display: none; }
+        html[lang="pt"] [data-lang="pt"] { display: initial; }
+        html[lang="pt"] [data-lang="en"] { display: none; }
+        html[lang="en"] [data-lang="pt"] { display: none; }
+        html[lang="en"] [data-lang="en"] { display: initial; }
+        .artist-card { transition: all .5s cubic-bezier(.16,1,.3,1); }
+        .artist-card:hover { background: rgba(255,255,255,0.02); }
+        .duo-img { transition: all .8s cubic-bezier(.16,1,.3,1); }
+        .duo-img:hover { transform: scale(1.02); }
+        .footer-link { transition: all .3s; position: relative; }
+        .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #FEDB00; transition: width .3s; }
+        .footer-link:hover::after { width: 100%; }
+        .sent-banner { transform: translateY(20px); opacity: 0; transition: all 0.5s cubic-bezier(0.16,1,0.3,1); pointer-events: none; }
+        .sent-banner.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        /* Hero line centered */
+        .hero-line-wrap { display: flex; justify-content: center; }
+        .hero-line-wrap .anim-line { transform-origin: center; }
+        .hero-line-wrap .anim-line.visible { animation: line-grow 1.2s cubic-bezier(0.16,1,0.3,1) forwards; }
+        @keyframes line-grow-center { from { transform:scaleX(0); } to { transform:scaleX(1); } }
+        /* Formspree button */
+        .form-submit-btn {
+            display: inline-flex; align-items: center; gap: 0.75rem;
+            padding: 1rem 2.5rem; border-radius: 0.5rem;
+            background: #FEDB00; color: #050505;
+            font-weight: 700; font-size: 0.875rem; letter-spacing: 0.05em;
+            text-transform: uppercase; border: none; cursor: pointer;
+            box-shadow: 0 0 30px -8px rgba(254,219,0,0.4);
+            transition: all 0.3s ease;
+        }
+        .form-submit-btn:hover { background: #E6C600; transform: translateY(-2px); box-shadow: 0 0 40px -8px rgba(254,219,0,0.6); }
+        .form-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        /* Spinner */
+        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(5,5,5,0.3); border-top-color: #050505; border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-charcoal-950 text-white font-sans antialiased overflow-x-hidden">
+
+<div class="noise-bg"></div>
+
+<!-- NAV -->
+<nav id="nav" class="fixed top-0 w-full z-40 transition-all duration-700">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between h-20">
+        <a href="#" class="relative z-50 font-display font-bold text-lg tracking-[0.1em] uppercase text-gold-400">Cangibrina</a>
+        <div class="hidden lg:flex items-center gap-10">
+            <a href="#sobre" class="text-[11px] font-medium tracking-[0.2em] uppercase text-neutral-400 hover:text-white transition-colors"><span data-lang="pt">O Espetáculo</span><span data-lang="en">The Show</span></a>
+            <a href="#release" class="text-[11px] font-medium tracking-[0.2em] uppercase text-neutral-400 hover:text-white transition-colors"><span data-lang="pt">Release</span><span data-lang="en">Press Release</span></a>
+            <a href="#artistas" class="text-[11px] font-medium tracking-[0.2em] uppercase text-neutral-400 hover:text-white transition-colors"><span data-lang="pt">Artistas</span><span data-lang="en">Artists</span></a>
+            <a href="#contato" class="text-[11px] font-medium tracking-[0.2em] uppercase text-neutral-400 hover:text-white transition-colors"><span data-lang="pt">Contato</span><span data-lang="en">Contact</span></a>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="hidden sm:flex items-center border border-white/10 rounded-full overflow-hidden">
+                <button onclick="setLang('pt')" class="lang-btn active text-[10px] font-bold tracking-wider uppercase px-3 py-1.5 transition-all">PT</button>
+                <button onclick="setLang('en')" class="lang-btn text-[10px] font-bold tracking-wider uppercase px-3 py-1.5 text-neutral-500 hover:text-white transition-all">EN</button>
+            </div>
+            <button class="lg:hidden relative z-50 w-10 h-10 flex flex-col items-center justify-center gap-1.5" onclick="toggleMenu()">
+                <span class="menu-line w-6 h-px bg-white transition-all duration-300 origin-center"></span>
+                <span class="menu-line w-6 h-px bg-white transition-all duration-300 origin-center"></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mobileMenu" class="mobile-menu fixed inset-0 z-40 bg-charcoal-950 flex flex-col items-center justify-center gap-8">
+    <a href="#sobre" onclick="toggleMenu()" class="text-2xl font-light tracking-[0.15em] uppercase text-neutral-400 hover:text-white transition-colors"><span data-lang="pt">O Espetáculo</span><span data-lang="en">The Show</span></a>
+    <a href="#release" onclick="toggleMenu()" class="text-2xl font-light tracking-[0.15em] uppercase text-neutral-400 hover:text-white transition-colors"><span data-lang="pt">Release</span><span data-lang="en">Press Release</span></a>
+    <a href="#artistas" onclick="toggleMenu()" class="text-2xl font-light tracking-[0.15em] uppercase text-neutral-400 hover:text-white transition-colors"><span data-lang="pt">Artistas</span><span data-lang="en">Artists</span></a>
+    <a href="#contato" onclick="toggleMenu()" class="text-2xl font-light tracking-[0.15em] uppercase text-neutral-400 hover:text-white transition-colors"><span data-lang="pt">Contato</span><span data-lang="en">Contact</span></a>
+    <div class="flex items-center border border-white/10 rounded-full overflow-hidden mt-4">
+        <button onclick="setLang('pt')" class="lang-btn active text-xs font-bold tracking-wider uppercase px-4 py-2 transition-all">PT</button>
+        <button onclick="setLang('en')" class="lang-btn text-xs font-bold tracking-wider uppercase px-4 py-2 text-neutral-500 hover:text-white transition-all">EN</button>
+    </div>
+</div>
+
+<!-- HERO — Centralizado e com título menor -->
+<section class="relative min-h-screen flex items-end overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="https://z-cdn-media.chatglm.cn/files/6ca7967e-3c7a-4d45-ae02-7c1a606fd44c.png?auth_key=1884223543-58c3e1de128142f1ae740134d146c349-0-db16b7b0992c960eddbcc283be96488a" alt="Kléber Albuquerque & Vivi Correa" class="w-full h-full object-cover object-top opacity-50 scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-charcoal-950 via-charcoal-950/50 to-charcoal-950/70"></div>
+    </div>
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 pb-16 lg:pb-24 text-center">
+        <div class="hero-line-wrap anim-line w-16 h-px bg-gold-400 mb-8"></div>
+        <h1 class="anim d1 font-display text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold tracking-tight leading-[0.95] text-gold-400">
+            Kléber Albuquerque<br>& Vivi Correa
+        </h1>
+        <p class="anim d2 text-lg sm:text-xl lg:text-2xl font-light tracking-tight mt-4 text-white/60 mx-auto">
+            <span data-lang="pt">no show</span><span data-lang="en">in the show</span> <span class="text-gold-400">"Cangibrina"</span>
+        </p>
+        <p class="anim d3 text-neutral-400 font-light text-sm sm:text-base max-w-lg leading-relaxed mt-6 mx-auto">
+            <span data-lang="pt">Música artesanal brasileira para apreciar sem moderação.</span>
+            <span data-lang="en">Handcrafted Brazilian music to be enjoyed without moderation.</span>
+        </p>
+        <p class="anim d4 text-neutral-500 font-light text-sm max-w-lg leading-relaxed mt-3 mx-auto">
+            <span data-lang="pt">Um show intimista que mistura música autoral e clássicos da MPB com poesia e bom humor.</span>
+            <span data-lang="en">An intimate show that blends original songs and MPB classics with poetry and good humor.</span>
+        </p>
+        <div class="anim d5 flex flex-wrap items-center justify-center gap-4 mt-10">
+            <a href="#contato" class="inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-gold-500 text-charcoal-950 font-bold text-sm tracking-wide hover:bg-gold-400 hover:-translate-y-0.5 transition-all duration-300 shadow-[0_0_30px_-8px_rgba(254,219,0,0.4)]">
+                <span data-lang="pt">Quero contratar o show</span><span data-lang="en">I want to book the show</span>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+<!-- SOBRE O ESPETÁCULO -->
+<section id="sobre" class="py-24 lg:py-40 px-6 lg:px-12">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-12 gap-12 lg:gap-20">
+            <div class="lg:col-span-5">
+                <div class="anim"><span class="text-[11px] font-medium tracking-[0.25em] uppercase text-gold-500"><span data-lang="pt">O Espetáculo</span><span data-lang="en">The Show</span></span></div>
+                <h2 class="anim d1 font-display text-3xl lg:text-5xl font-bold tracking-tight mt-6 leading-tight text-gold-400"><span data-lang="pt">Sobre o<br>espetáculo</span><span data-lang="en">About the<br>show</span></h2>
+            </div>
+            <div class="lg:col-span-7">
+                <p class="anim d2 text-neutral-300 font-light leading-[1.9] text-base lg:text-lg">
+                    <span data-lang="pt">Em tempos de inteligências e emoções artificiais, Kléber Albuquerque e Vivi Correa apostam na originalidade para destilar um repertório eclético que mistura boas doses de música autoral com clássicos improváveis da MPB. Com o show Cangibrina, este casal de paulistas que adotaram Salvador como lar cria uma atmosfera única nos palcos com uma mistura única de minimalismo, poesia e bom humor.</span>
+                    <span data-lang="en">In times of artificial intelligences and emotions, Kléber Albuquerque and Vivi Correa bet on originality to distill an eclectic repertoire that blends generous doses of original music with unlikely MPB classics. With the show Cangibrina, this couple of São Paulo natives who adopted Salvador as their home creates a unique atmosphere on stage with a singular mix of minimalism, poetry, and good humor.</span>
+                </p>
+                <div class="anim d3 grid sm:grid-cols-2 gap-8 mt-12 pt-8 border-t border-white/10">
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center"><iconify-icon icon="lucide:music" width="14" class="text-gold-400"></iconify-icon></div>
+                            <h4 class="font-display font-bold text-sm text-gold-300"><span data-lang="pt">Clássicos reinventados</span><span data-lang="en">Reinvented classics</span></h4>
+                        </div>
+                        <p class="text-sm text-neutral-500 font-light leading-relaxed"><span data-lang="pt">Versões insólitas e cheias de personalidade para clássicos inusitados da música brasileira.</span><span data-lang="en">Singular and personality-filled versions of unusual Brazilian music classics.</span></p>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center"><iconify-icon icon="lucide:pen-tool" width="14" class="text-gold-400"></iconify-icon></div>
+                            <h4 class="font-display font-bold text-sm text-gold-300"><span data-lang="pt">Música autoral</span><span data-lang="en">Original music</span></h4>
+                        </div>
+                        <p class="text-sm text-neutral-500 font-light leading-relaxed"><span data-lang="pt">Composições de Kléber Albuquerque que misturam poesia e música com identidade única.</span><span data-lang="en">Compositions by Kléber Albuquerque that blend poetry and music with a unique identity.</span></p>
+                    </div>
+                </div>
+                <div class="anim d4 mt-12 rounded-xl overflow-hidden duo-img cursor-pointer">
+                    <img src="https://z-cdn-media.chatglm.cn/files/f78aa6f9-71e0-4ce0-9aaf-8c808e084bc4.png?auth_key=1884224383-60941a2a877245108ae252d1501acfe6-0-505df026575b2ef85378d93115fc51a2" alt="Kléber e Vivi" class="w-full h-auto object-cover">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RELEASE + FICHA TÉCNICA + VÍDEOS -->
+<section id="release" class="py-24 lg:py-40 px-6 lg:px-12 bg-charcoal-900/20">
+    <div class="max-w-7xl mx-auto">
+        <div class="mb-16">
+            <div class="anim"><span class="text-[11px] font-medium tracking-[0.25em] uppercase text-gold-500"><span data-lang="pt">Release</span><span data-lang="en">Press Release</span></span></div>
+            <h2 class="anim d1 font-display text-3xl lg:text-5xl font-bold tracking-tight mt-6 text-gold-400"><span data-lang="pt">Release do show</span><span data-lang="en">Show press release</span></h2>
+        </div>
+        <div class="grid lg:grid-cols-12 gap-12 lg:gap-20">
+            <div class="lg:col-span-7">
+                <p class="anim d2 text-neutral-300 font-light leading-[1.9] text-base lg:text-lg">
+                    <span data-lang="pt">No show Cangibrina, Kléber Albuquerque e Vivi Correa mesclam versões insólitas para músicas como "Não se vá", de Jane e Herondy, "Como eu quero", de Kid Abelha, e "Beijinho doce". A parte autoral do repertório fica a cargo das composições de Kléber Albuquerque, que tem músicas gravadas por nomes como Zeca Baleiro, Márcia Castro e Ceumar, além de prêmios como o APCA no currículo.</span>
+                    <span data-lang="en">In the show Cangibrina, Kléber Albuquerque and Vivi Correa blend singular versions of songs such as "Não se vá" by Jane e Herondy, "Como eu quero" by Kid Abelha, and "Beijinho doce". The original part of the repertoire features compositions by Kléber Albuquerque, whose songs have been recorded by artists like Zeca Baleiro, Márcia Castro, and Ceumar, in addition to awards such as APCA on his résumé.</span>
+                </p>
+            </div>
+            <div class="lg:col-span-5">
+                <div class="anim d3">
+                    <h4 class="text-[11px] font-medium tracking-[0.25em] uppercase text-gold-500 mb-6"><span data-lang="pt">Ficha Técnica</span><span data-lang="en">Technical Sheet</span></h4>
+                    <div class="space-y-0">
+                        <div class="tech-row flex justify-between py-4 gap-4"><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="pt">Formato</span><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="en">Format</span><span class="text-sm text-neutral-300 text-right" data-lang="pt">Voz e violão</span><span class="text-sm text-neutral-300 text-right" data-lang="en">Voice and guitar</span></div>
+                        <div class="tech-row flex justify-between py-4 gap-4"><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="pt">Duração</span><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="en">Duration</span><span class="text-sm text-neutral-300 text-right">70–80 <span data-lang="pt">minutos</span><span data-lang="en">minutes</span></span></div>
+                        <div class="tech-row flex justify-between py-4 gap-4"><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="pt">Formato técnico</span><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="en">Technical format</span><span class="text-sm text-neutral-300 text-right" data-lang="pt">Ideal para teatros, centros culturais</span><span class="text-sm text-neutral-300 text-right" data-lang="en">Ideal for theaters, cultural centers</span></div>
+                        <div class="tech-row flex justify-between py-4 gap-4"><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="pt">Público</span><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="en">Audience</span><span class="text-sm text-neutral-300 text-right" data-lang="pt">Apresentação intimista voltada para escuta da canção</span><span class="text-sm text-neutral-300 text-right" data-lang="en">Intimate presentation focused on song listening</span></div>
+                        <div class="tech-row flex justify-between py-4 gap-4"><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="pt">Necessidades técnicas</span><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="en">Technical needs</span><span class="text-sm text-neutral-300 text-right">2 <span data-lang="pt">microfones e entrada P10 ou Canon para violão</span><span data-lang="en">microphones and P10 or Canon input for guitar</span></span></div>
+                        <div class="tech-row flex justify-between py-4 gap-4"><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="pt">Classificação indicativa</span><span class="text-sm text-neutral-500 flex-shrink-0" data-lang="en">Age rating</span><span class="text-sm text-neutral-300 text-right" data-lang="pt">Livre</span><span class="text-sm text-neutral-300 text-right" data-lang="en">All ages</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VÍDEOS -->
+        <div class="mt-20">
+            <div class="anim"><p class="text-neutral-400 font-light text-base"><span data-lang="pt">Confira a seguir alguns trechos do show:</span><span data-lang="en">Watch some excerpts from the show below:</span></p></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+                <a href="https://www.youtube.com/watch?v=OGZCj-M7gCE" target="_blank" class="anim d1 video-thumb group" rel="noopener noreferrer">
+                    <img src="https://img.youtube.com/vi/OGZCj-M7gCE/hqdefault.jpg" alt="Trecho 1" loading="lazy">
+                    <div class="play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 5.14v13.72a1 1 0 001.5.86l11.04-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z" fill="#050505"/></svg></div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=Z3OCK_Pew-c" target="_blank" class="anim d2 video-thumb group" rel="noopener noreferrer">
+                    <img src="https://img.youtube.com/vi/Z3OCK_Pew-c/hqdefault.jpg" alt="Trecho 2" loading="lazy">
+                    <div class="play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 5.14v13.72a1 1 0 001.5.86l11.04-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z" fill="#050505"/></svg></div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=wuz3uasNkoo" target="_blank" class="anim d3 video-thumb group" rel="noopener noreferrer">
+                    <img src="https://img.youtube.com/vi/wuz3uasNkoo/hqdefault.jpg" alt="Trecho 3" loading="lazy">
+                    <div class="play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 5.14v13.72a1 1 0 001.5.86l11.04-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z" fill="#050505"/></svg></div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=L9pZx3YJr_s" target="_blank" class="anim d4 video-thumb group" rel="noopener noreferrer">
+                    <img src="https://img.youtube.com/vi/L9pZx3YJr_s/hqdefault.jpg" alt="Trecho 4" loading="lazy">
+                    <div class="play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 5.14v13.72a1 1 0 001.5.86l11.04-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z" fill="#050505"/></svg></div>
+                </a>
+            </div>
+        </div>
+        <div class="anim mt-12 text-center">
+            <a href="#contato" class="inline-flex items-center gap-3 text-sm font-medium tracking-[0.1em] uppercase text-gold-400 hover:text-gold-300 transition-colors group">
+                <span data-lang="pt">Quero contratar o show</span><span data-lang="en">I want to book the show</span>
+                <iconify-icon icon="lucide:arrow-right" width="16" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- SOBRE OS ARTISTAS -->
+<section id="artistas" class="py-24 lg:py-40 px-6 lg:px-12">
+    <div class="max-w-7xl mx-auto">
+        <div class="mb-20">
+            <div class="anim"><span class="text-[11px] font-medium tracking-[0.25em] uppercase text-gold-500"><span data-lang="pt">Artistas</span><span data-lang="en">Artists</span></span></div>
+            <h2 class="anim d1 font-display text-3xl lg:text-5xl font-bold tracking-tight mt-6 text-gold-400"><span data-lang="pt">Sobre os artistas</span><span data-lang="en">About the artists</span></h2>
+        </div>
+        <div class="anim artist-card rounded-2xl p-6 lg:p-10 mb-6 border border-white/5">
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-16">
+                <div class="lg:col-span-4">
+                    <div class="aspect-[3/4] rounded-xl overflow-hidden bg-charcoal-900">
+                        <img src="https://z-cdn-media.chatglm.cn/files/beb7ff47-e622-4118-a9aa-3b230d8f2318.png?auth_key=1884224383-9cf0b6f336db41708f24d88951c09edc-0-9c798f68c304559a3c384f93dc414009" alt="Kléber Albuquerque" class="w-full h-full object-cover opacity-80 hover:opacity-100 hover:scale-105 transition-all duration-700">
+                    </div>
+                </div>
+                <div class="lg:col-span-8 flex flex-col justify-center">
+                    <h3 class="font-display text-2xl lg:text-3xl font-bold tracking-tight text-gold-400">Kléber Albuquerque</h3>
+                    <p class="text-gold-500/60 text-sm font-medium tracking-wide mt-2"><span data-lang="pt">Kléber Albuquerque no seu espetáculo Cangibrina</span><span data-lang="en">Kléber Albuquerque in his show Cangibrina</span></p>
+                    <p class="text-neutral-300 font-light leading-[1.9] text-base mt-6"><span data-lang="pt">Paulista de Santo André, Kléber é um dos compositores mais originais da nova cena da MPB. Com um cancioneiro que transita entre a tradição nordestina e a sofisticação poética urbana, tem músicas gravadas por nomes como Zeca Baleiro, Márcia Castro e Ceumar. Seu trabalho lhe rendeu prêmios de peso, como o APCA e Coca-Cola Femsa por suas composições para teatro.</span><span data-lang="en">From Santo André, São Paulo, Kléber is one of the most original composers of the new MPB scene. With a songbook that moves between Northeastern tradition and urban poetic sophistication, he has songs recorded by artists such as Zeca Baleiro, Márcia Castro, and Ceumar. His work has earned him major awards, including APCA and Coca-Cola Femsa for his theater compositions.</span></p>
+                    <div class="flex flex-wrap items-center gap-4 mt-8">
+                        <a href="https://open.spotify.com/intl-pt/artist/6w86Fhz9J95CDm6NmpqZs3?si=ibHo5iayTYee7XKe-qP4AQ" target="_blank" class="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-emerald-400 transition-colors"><iconify-icon icon="lucide:disc-3" width="16"></iconify-icon> Spotify</a>
+                        <span class="text-neutral-700">·</span>
+                        <a href="https://www.kleberalbuquerque.com.br" target="_blank" class="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-gold-400 transition-colors group"><span data-lang="pt">Conheça as canções de Kléber</span><span data-lang="en">Discover Kléber's songs</span><iconify-icon icon="lucide:external-link" width="14" class="group-hover:translate-x-0.5 transition-transform"></iconify-icon></a>
+                    </div>
+                    <p class="text-sm text-neutral-600 mt-6"><span data-lang="pt">Confira mais sobre Kléber em seu site oficial:</span><span data-lang="en">Learn more about Kléber on his official website:</span><a href="https://www.kleberalbuquerque.com.br" target="_blank" class="text-neutral-400 hover:text-gold-400 transition-colors ml-1">www.kleberalbuquerque.com.br</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="anim artist-card rounded-2xl p-6 lg:p-10 border border-white/5">
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-16">
+                <div class="lg:col-span-4 order-2 lg:order-1">
+                    <div class="aspect-[3/4] rounded-xl overflow-hidden bg-charcoal-900">
+                        <img src="https://z-cdn-media.chatglm.cn/files/fd1042eb-12fe-4583-80a0-cdc40b19cdbe.png?auth_key=1884224383-2119e6f1f4a1487fb350b42c22cf2e12-0-7c22b0655f3f8cf03c8a90c26beaed1b" alt="Vivi Correa" class="w-full h-full object-cover opacity-80 hover:opacity-100 hover:scale-105 transition-all duration-700">
+                    </div>
+                </div>
+                <div class="lg:col-span-8 flex flex-col justify-center order-1 lg:order-2">
+                    <h3 class="font-display text-2xl lg:text-3xl font-bold tracking-tight text-gold-400">Vivi Correa</h3>
+                    <p class="text-neutral-300 font-light leading-[1.9] text-base mt-6"><span data-lang="pt">Filha de mãe pernambucana e pai paulista, Vivi carrega em sua trajetória musical um trânsito afetivo entre ritmos, sotaques e sensibilidades distintas, uma mistura que ecoa tanto em sua escuta quanto na forma como constrói suas interpretações.</span><span data-lang="en">Daughter of a Pernambuco mother and a São Paulo father, Vivi carries in her musical journey an affective transit between rhythms, accents, and distinct sensitivities, a blend that echoes both in her listening and in how she constructs her interpretations.</span></p>
+                    <p class="text-neutral-300 font-light leading-[1.9] text-base mt-4"><span data-lang="pt">No show Cangibrina, expande seu universo artesanal para os palcos: canta, toca percussão e assina a cenografia do espetáculo, costurando música, presença e matéria em uma experiência sensível e autoral.</span><span data-lang="en">In the show Cangibrina, she expands her handcrafted universe to the stage: she sings, plays percussion, and designs the show's scenography, weaving music, presence, and material into a sensitive and authorial experience.</span></p>
+                    <p class="text-neutral-300 font-light leading-[1.9] text-base mt-4"><span data-lang="pt">Artista joalheira e mestranda em História, é uma multiartista que transita por diferentes territórios criativos. Com formação em Belas Artes e especialização em Design de Produto, desenvolve há mais de 28 anos "esculturas para o corpo", peças que já passaram por exposições como a Casa Cor e pela loja do MAM-SP. Em sua trajetória, criação e canção se entrelaçam, fazendo com que suas joias dialoguem diretamente com seu universo musical.</span><span data-lang="en">A jewelry artist and History master's student, she is a multi-artist who moves through different creative territories. With a degree in Fine Arts and a specialization in Product Design, she has been developing "body sculptures" for over 28 years — pieces that have been featured in exhibitions such as Casa Cor and the MAM-SP store. Throughout her journey, creation and song intertwine, making her jewelry directly dialog with her musical universe.</span></p>
+                    <div class="mt-8"><p class="text-sm text-neutral-600"><span data-lang="pt">Conheça a loja virtual da Vivi:</span><span data-lang="en">Visit Vivi's online store:</span><a href="https://www.vivicorrea.com.br" target="_blank" class="text-neutral-400 hover:text-gold-400 transition-colors ml-1">www.vivicorrea.com.br</a></p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA CENTRAL -->
+<section class="py-20 lg:py-32 px-6 lg:px-12 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-gold-500/[0.03] to-transparent"></div>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+        <div class="anim"><iconify-icon icon="lucide:music-2" width="32" class="text-gold-500/40"></iconify-icon></div>
+        <h2 class="anim d1 font-display text-2xl lg:text-4xl font-bold tracking-tight mt-6 leading-tight text-gold-400"><span data-lang="pt">"Cangibrina" — música artesanal brasileira para apreciar sem moderação.</span><span data-lang="en">"Cangibrina" — handcrafted Brazilian music to be enjoyed without moderation.</span></h2>
+        <div class="anim d2 flex flex-wrap items-center justify-center gap-4 mt-10">
+            <a href="#contato" class="inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-gold-500 text-charcoal-950 font-bold text-sm tracking-wide hover:bg-gold-400 hover:-translate-y-0.5 transition-all duration-300 shadow-[0_0_30px_-8px_rgba(254,219,0,0.4)]"><span data-lang="pt">Quero contratar o show</span><span data-lang="en">I want to book the show</span></a>
+            <a href="https://wa.me/5571991064721" target="_blank" class="inline-flex items-center gap-2 px-6 py-4 rounded-lg border border-white/10 text-neutral-300 font-medium text-sm tracking-wide hover:border-emerald-500/30 hover:text-emerald-400 hover:-translate-y-0.5 transition-all duration-300"><iconify-icon icon="lucide:message-circle" width="16"></iconify-icon> WhatsApp</a>
+        </div>
+    </div>
+</section>
+
+<!-- CONTATO — COM FORMSPREE -->
+<section id="contato" class="py-24 lg:py-40 px-6 lg:px-12 border-t border-white/5">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-12 gap-16 lg:gap-20">
+            <div class="lg:col-span-7">
+                <div class="anim"><span class="text-[11px] font-medium tracking-[0.25em] uppercase text-gold-500"><span data-lang="pt">Contato</span><span data-lang="en">Contact</span></span></div>
+                <h2 class="anim d1 font-display text-3xl lg:text-5xl font-bold tracking-tight mt-6 text-gold-400"><span data-lang="pt">Vamos conversar?</span><span data-lang="en">Let's talk?</span></h2>
+                <p class="anim d2 text-neutral-400 font-light leading-[1.8] mt-6 max-w-lg"><span data-lang="pt">Para contratar o show, propor parcerias ou simplesmente dizer olá, escreva pra gente.</span><span data-lang="en">To book the show, propose partnerships, or simply say hello, write to us.</span></p>
+
+                <!-- Sent message banner -->
+                <div id="sentBanner" class="sent-banner bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-6 py-4 flex items-center gap-3 mb-8">
+                    <iconify-icon icon="lucide:check-circle" width="18" class="text-emerald-400"></iconify-icon>
+                    <div>
+                        <p class="text-sm font-medium text-emerald-300" data-lang="pt">Mensagem enviada com sucesso!</p>
+                        <p class="text-xs text-emerald-400/60" data-lang="en">Message sent successfully!</p>
+                    </div>
+                </div>
+
+                <!-- Formspree Form -->
+                <form id="contactForm" action="https://formspree.io/f/SEU_ID_AQUI" method="POST" class="space-y-8">
+                    <input type="hidden" name="_subject" value="Contato via site Cangibrina">
+                    <div class="anim d3">
+                        <div class="input-line relative">
+                            <input type="text" name="nome" required placeholder=" " class="w-full bg-transparent pt-4 pb-2 text-white placeholder-transparent focus:outline-none peer text-lg font-light" id="nomeInput">
+                            <label class="absolute left-0 top-4 text-neutral-500 text-sm transition-all duration-300 peer-focus:-top-1 peer-focus:text-gold-400 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-1 peer-[:not(:placeholder-shown)]:text-xs">
+                                <span data-lang="pt">Nome</span><span data-lang="en">Name</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="anim d4">
+                        <div class="input-line relative">
+                            <input type="email" name="email" required placeholder=" " class="w-full bg-transparent pt-4 pb-2 text-white placeholder-transparent focus:outline-none peer text-lg font-light" id="emailInput">
+                            <label class="absolute left-0 top-4 text-neutral-500 text-sm transition-all duration-300 peer-focus:-top-1 peer-focus:text-gold-400 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-1 peer-[:not(:placeholder-shown)]:text-xs">E-mail</label>
+                        </div>
+                    </div>
+                    <div class="anim d5">
+                        <div class="input-line relative">
+                            <textarea name="mensagem" rows="3" placeholder=" " class="w-full bg-transparent pt-4 pb-2 text-white placeholder-transparent focus:outline-none peer resize-none text-lg font-light" id="msgInput"></textarea>
+                            <label class="absolute left-0 top-4 text-neutral-500 text-sm transition-all duration-300 peer-focus:-top-1 peer-focus:text-gold-400 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-1 peer-[:not(:placeholder-shown)]:text-xs">
+                                <span data-lang="pt">Mensagem</span><span data-lang="en">Message</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="anim d6">
+                        <button type="submit" id="submitBtn" class="form-submit-btn">
+                            <span data-lang="pt">Enviar mensagem</span><span data-lang="en">Send message</span>
+                            <iconify-icon icon="lucide:send" width="16"></iconify-icon>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="lg:col-span-5 space-y-10 lg:pt-20">
+                <div class="anim d3"><h4 class="text-[11px] tracking-[0.25em] uppercase text-neutral-500 mb-3"><span data-lang="pt">E-mails</span><span data-lang="en">Emails</span></h4><div class="space-y-2"><a href="mailto:cangibrinaoficial@gmail.com" class="block text-base font-light hover:text-gold-300 transition-colors">cangibrinaoficial@gmail.com</a><a href="mailto:kleberalbuquerque7@gmail.com" class="block text-base font-light hover:text-gold-300 transition-colors">kleberalbuquerque7@gmail.com</a><a href="mailto:contato@vivicorrea.com.br" class="block text-base font-light hover:text-gold-300 transition-colors">contato@vivicorrea.com.br</a></div></div>
+                <div class="anim d4"><h4 class="text-[11px] tracking-[0.25em] uppercase text-neutral-500 mb-3">WhatsApp</h4><a href="https://wa.me/5571991064721" target="_blank" class="text-lg font-light hover:text-emerald-400 transition-colors flex items-center gap-2"><iconify-icon icon="lucide:message-circle" width="18"></iconify-icon> 71 99106 4721</a></div>
+                <div class="anim d5"><h4 class="text-[11px] tracking-[0.25em] uppercase text-neutral-500 mb-3"><span data-lang="pt">Localização</span><span data-lang="en">Location</span></h4><p class="text-lg font-light text-neutral-300">Salvador, Bahia</p></div>
+                <div class="anim d6 pt-8 border-t border-white/10"><h4 class="text-[11px] tracking-[0.25em] uppercase text-neutral-500 mb-4"><span data-lang="pt">Links</span><span data-lang="en">Links</span></h4><div class="space-y-3"><a href="https://www.kleberalbuquerque.com.br" target="_blank" class="block text-sm text-neutral-400 hover:text-gold-400 transition-colors">kleberalbuquerque.com.br</a><a href="https://www.vivicorrea.com.br" target="_blank" class="block text-sm text-neutral-400 hover:text-gold-400 transition-colors">vivicorrea.com.br</a></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-white/5 pt-16 pb-10 px-6 lg:px-12">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <div><span class="font-display font-bold text-lg tracking-[0.1em] uppercase text-gold-400">Cangibrina</span><p class="text-sm text-neutral-600 font-light leading-relaxed mt-3"><span data-lang="pt">Kléber Albuquerque & Vivi Correa</span><span data-lang="en">Kléber Albuquerque & Vivi Correa</span></p></div>
+            <div><h4 class="text-[11px] tracking-[0.2em] uppercase text-neutral-500 font-medium mb-4">WhatsApp</h4><a href="https://wa.me/5571991064721" target="_blank" class="footer-link text-sm text-neutral-400 hover:text-emerald-400 transition-colors">71 99106 4721</a></div>
+            <div><h4 class="text-[11px] tracking-[0.2em] uppercase text-neutral-500 font-medium mb-4">E-mail</h4><div class="space-y-2"><a href="mailto:cangibrinaoficial@gmail.com" class="footer-link block text-sm text-neutral-400 hover:text-gold-400 transition-colors">cangibrinaoficial@gmail.com</a><a href="mailto:kleberalbuquerque7@gmail.com" class="footer-link block text-sm text-neutral-400 hover:text-gold-400 transition-colors">kleberalbuquerque7@gmail.com</a><a href="mailto:contato@vivicorrea.com.br" class="footer-link block text-sm text-neutral-400 hover:text-gold-400 transition-colors">contato@vivicorrea.com.br</a></div></div>
+            <div>
+                <h4 class="text-[11px] tracking-[0.2em] uppercase text-neutral-500 font-medium mb-4"><span data-lang="pt">Redes Sociais</span><span data-lang="en">Social Media</span></h4>
+                <div class="flex flex-wrap gap-2">
+                    <a href="https://www.instagram.com/cangibrinaoficial/" target="_blank" class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-neutral-500 hover:text-gold-400 hover:border-gold-500/30 transition-all duration-300" title="Instagram Cangibrina"><iconify-icon icon="lucide:instagram" width="14"></iconify-icon></a>
+                    <a href="https://www.instagram.com/kleberalbuquerqueoficial/" target="_blank" class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-neutral-500 hover:text-gold-400 hover:border-gold-500/30 transition-all duration-300" title="Instagram Kléber"><iconify-icon icon="lucide:instagram" width="14"></iconify-icon></a>
+                    <a href="https://www.instagram.com/vivicorreadesign/" target="_blank" class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-neutral-500 hover:text-gold-400 hover:border-gold-500/30 transition-all duration-300" title="Instagram Vivi"><iconify-icon icon="lucide:instagram" width="14"></iconify-icon></a>
+                    <a href="https://open.spotify.com/intl-pt/artist/6w86Fhz9J95CDm6NmpqZs3?si=ibHo5iayTYee7XKe-qP4AQ" target="_blank" class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-neutral-500 hover:text-emerald-400 hover:border-emerald-500/30 transition-all duration-300" title="Spotify Kléber"><iconify-icon icon="lucide:disc-3" width="14"></iconify-icon></a>
+                    <a href="https://open.spotify.com/intl-pt/artist/1ZpBiSFN93jqbYEC4avLnp?si=Uzlv460BQxe9uj3O3BZq2A" target="_blank" class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-neutral-500 hover:text-emerald-400 hover:border-emerald-500/30 transition-all duration-300" title="Spotify Vivi"><iconify-icon icon="lucide:disc-3" width="14"></iconify-icon></a>
+                </div>
+                <div class="flex flex-wrap gap-x-3 gap-y-1 mt-3">
+                    <span class="text-[10px] text-neutral-700">Cangibrina</span>
+                    <span class="text-[10px] text-neutral-700">Kléber</span>
+                    <span class="text-[10px] text-neutral-700">Vivi</span>
+                </div>
+            </div>
+        </div>
+        <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+            <span class="text-[11px] tracking-[0.15em] uppercase text-neutral-700">© 2025 Cangibrina</span>
+            <div class="flex items-center gap-6">
+                <a href="https://www.kleberalbuquerque.com.br" target="_blank" class="text-[11px] tracking-[0.1em] uppercase text-neutral-700 hover:text-neutral-400 transition-colors">kleberalbuquerque.com.br</a>
+                <a href="https://www.vivicorrea.com.br" target="_blank" class="text-[11px] tracking-[0.1em] uppercase text-neutral-700 hover:text-neutral-400 transition-colors">vivicorrea.com.br</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- TOAST -->
+<div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[70] bg-charcoal-900/95 border border-gold-500/20 rounded-lg px-6 py-3 flex items-center gap-3 opacity-0 translate-y-4 transition-all duration-500 pointer-events-none nav-blur">
+    <iconify-icon icon="lucide:check" width="16" class="text-gold-400"></iconify-icon>
+    <span class="text-sm text-white" data-lang="pt">Mensagem enviada com sucesso!</span>
+    <span class="text-sm text-white" data-lang="en">Message sent successfully!</span>
+</div>
+
+<script>
+function setLang(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+        b.classList.remove('active');
+        if (b.textContent.trim() === lang.toUpperCase()) b.classList.add('active');
+    });
+}
+var menuOpen = false;
+function toggleMenu() {
+    menuOpen = !menuOpen;
+    var m = document.getElementById('mobileMenu'), l = document.querySelectorAll('.menu-line');
+    if (menuOpen) { m.classList.add('open'); l[0].style.transform='rotate(45deg) translateY(4px)'; l[1].style.transform='rotate(-45deg) translateY(-4px)'; document.body.style.overflow='hidden'; }
+    else { m.classList.remove('open'); l[0].style.transform=''; l[1].style.transform=''; document.body.style.overflow=''; }
+}
+var nav = document.getElementById('nav');
+window.addEventListener('scroll', function() {
+    if (window.scrollY > 80) { nav.classList.add('bg-charcoal-950/80','nav-blur','border-b','border-white/5'); }
+    else { nav.classList.remove('bg-charcoal-950/80','nav-blur','border-b','border-white/5'); }
+});
+var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.anim, .anim-line').forEach(function(el) { obs.observe(el); });
+window.addEventListener('load', function() {
+    document.querySelectorAll('section:first-of-type .anim, section:first-of-type .anim-line').forEach(function(el) { el.classList.add('visible'); });
+});
+
+// Formspree submission handler
+var contactForm = document.getElementById('contactForm');
+var submitBtn = document.getElementById('submitBtn');
+var sentBanner = document.getElementById('sentBanner');
+
+contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Show loading state
+    var btnText = submitBtn.querySelector('[data-lang="pt"]');
+    var btnTextEn = submitBtn.querySelector('[data-lang="en"]');
+    var btnIcon = submitBtn.querySelector('iconify-icon');
+    var originalTextPt = btnText ? btnText.textContent : '';
+    var originalTextEn = btnTextEn ? btnTextEn.textContent : '';
+
+    submitBtn.disabled = true;
+    if (btnText) btnText.textContent = 'Enviando...';
+    if (btnTextEn) btnTextEn.textContent = 'Sending...';
+    if (btnIcon) btnIcon.style.display = 'none';
+
+    var formData = new FormData(contactForm);
+
+    fetch(contactForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(function(response) {
+        if (response.ok) {
+            // Success
+            contactForm.reset();
+            sentBanner.classList.add('show');
+            showToast();
+            setTimeout(function() { sentBanner.classList.remove('show'); }, 5000);
+        } else {
+            // Fallback: open mailto
+            fallbackMailto();
+        }
+    })
+    .catch(function() {
+        // Fallback: open mailto
+        fallbackMailto();
+    })
+    .finally(function() {
+        submitBtn.disabled = false;
+        if (btnText) btnText.textContent = originalTextPt;
+        if (btnTextEn) btnTextEn.textContent = originalTextEn;
+        if (btnIcon) btnIcon.style.display = '';
+    });
+});
+
+function fallbackMailto() {
+    var nome = document.getElementById('nomeInput').value.trim();
+    var email = document.getElementById('emailInput').value.trim();
+    var msg = document.getElementById('msgInput').value.trim();
+    var lang = document.documentElement.lang;
+    var subject = lang === 'pt' ? 'Contato via site Cangibrina' : 'Contact via Cangibrina website';
+    var body = lang === 'pt'
+        ? 'Nome: ' + nome + '\n\nE-mail: ' + email + '\n\n' + msg
+        : 'Name: ' + nome + '\nEmail: ' + email + '\n\n' + msg;
+    window.open('mailto:kleberalbuquerque7@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body), '_blank');
+}
+
+function showToast() {
+    var t = document.getElementById('toast');
+    t.style.opacity = '1';
+    t.style.transform = 'translate(-50%, 0)';
+    setTimeout(function() { t.style.opacity = '0'; t.style.transform = 'translate(-50%, 1rem)'; }, 3000);
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+        var target = document.querySelector(a.getAttribute('href'));
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+});
+</script>
+
+</body>
+</html>
